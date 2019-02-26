@@ -118,69 +118,69 @@ public class KeywordEngine
 			
 			try
 			{
-			switch (locatorName)
-			{
-			case "id":
-
-				element = driver.findElement(By.id(lcoatorVal));
-					
-				if(action.equalsIgnoreCase("sendKeys"))
+				switch (locatorName)
 				{
-					element.clear();
-					element.sendKeys(value);
+				case "id":
+
+					element = driver.findElement(By.id(lcoatorVal));
+
+					if (action.equalsIgnoreCase("sendKeys"))
+					{
+						element.clear();
+						element.sendKeys(value);
+					}
+					else if (action.equalsIgnoreCase("click"))
+					{
+						element.click();
+					}
+
+					locatorName = null;
+					break;
+
+				case "name":
+
+					break;
+
+				case "className":
+
+					break;
+
+				case "xpath":
+
+					break;
+
+				case "linkText":
+
+					WebElement element = driver.findElement(By.linkText(lcoatorVal));
+
+					if (action.equalsIgnoreCase("sendKeys"))
+					{
+						element.clear();
+						element.sendKeys(value);
+					}
+					else if (action.equalsIgnoreCase("click"))
+					{
+						element.click();
+					}
+
+					locatorName = null;
+					break;
+
+				case "partialLinkText":
+
+					break;
+
+				case "cssValue":
+
+					break;
+
+				case "tagName":
+
+					break;
+
+				default:
+					break;
 				}
-				else if(action.equalsIgnoreCase("click"))
-				{
-					element.click();
-				}
-				
-				locatorName = null;
-				break;
-
-			case "name":
-
-				break;
-
-			case "className":
-
-				break;
-
-			case "xpath":
-
-				break;
-
-			case "linkText":
-				
-				WebElement element = driver.findElement(By.linkText(lcoatorVal));
-				
-				if(action.equalsIgnoreCase("sendKeys"))
-				{
-					element.clear();
-					element.sendKeys(value);
-				}
-				else if(action.equalsIgnoreCase("click"))
-				{
-					element.click();
-				}
-				
-				locatorName = null;
-				break;
-
-			case "partialLinkText":
-
-				break;
-
-			case "cssValue":
-
-				break;
-
-			case "tagName":
-
-				break;
-
-			default:
-				break;
-			}
 			}
 			catch(Exception ex)
 			{
