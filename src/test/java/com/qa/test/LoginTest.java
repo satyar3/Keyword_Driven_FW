@@ -8,10 +8,17 @@ public class LoginTest
 {
 	public KeywordEngine  keywordEngine;
 	
-	@Test
+	@Test(enabled=false)
 	public void loginTestScenario()
 	{
 		keywordEngine = new KeywordEngine();
 		keywordEngine.startExecution("login");
+	}
+	
+	@Test
+	public void signUpTestScenario()
+	{
+		keywordEngine = new KeywordEngine();
+		keywordEngine.startExecution("signup");
 	}
 }

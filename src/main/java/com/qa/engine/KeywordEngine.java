@@ -10,8 +10,11 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.qa.base.Base;
 
@@ -27,12 +30,10 @@ public class KeywordEngine
 	public final String SCENARIO_SHEET_PATH = "src\\main\\java\\com\\qa\\scenarios\\HubspotScenarios.xlsx";
 	
 	public Base base;
+	WebDriverWait wait;
 	
 	public void startExecution(String sheetName)
 	{
-		String locatorName = null;
-		String lcoatorVal = null;
-		
 		FileInputStream fs = null;
 		
 		try
@@ -67,17 +68,12 @@ public class KeywordEngine
 		
 		for(int i = 0; i<sheet.getLastRowNum(); i++)
 		{
-			String locatorColValue = sheet.getRow(i+1).getCell(k+1).toString().trim();
-			
-			if(!locatorColValue.equalsIgnoreCase("na"))
-			{
-				locatorName = locatorColValue.split("=")[0].trim();
-				lcoatorVal = locatorColValue.split("=")[1].trim();
+			String locatorName = sheet.getRow(i+1).getCell(k+1).toString().trim();
+			String lcoatorVal = sheet.getRow(i+1).getCell(k+2).toString().trim();
 				
-			}
 			
-			String action = sheet.getRow(i+1).getCell(k+2).toString().trim();
-			String value = sheet.getRow(i+1).getCell(k+3).toString().trim();
+			String action = sheet.getRow(i+1).getCell(k+3).toString().trim();
+			String value = sheet.getRow(i+1).getCell(k+4).toString().trim();
 			
 			
 			//Switch to respective keywords
@@ -93,7 +89,7 @@ public class KeywordEngine
 				else
 					driver = base.intialize_driver(value);
 				
-				
+				wait = new WebDriverWait(driver,20);
 				break;
 			
 			case "enter url" : 
@@ -110,7 +106,7 @@ public class KeywordEngine
 				driver.quit();
 				
 				break;
-				
+			
 			default:
 				break;
 			}
@@ -118,71 +114,268 @@ public class KeywordEngine
 			
 			try
 			{
-				switch (locatorName)
-				{
+				switch (locatorName) {
 				case "id":
-
+					
+					wait.ignoring(NoSuchElementException.class).until(ExpectedConditions.presenceOfElementLocated(By.id(lcoatorVal)));
 					element = driver.findElement(By.id(lcoatorVal));
 
-					if (action.equalsIgnoreCase("sendKeys"))
-					{
+					if (action.equalsIgnoreCase("sendKeys")) {
 						element.clear();
 						element.sendKeys(value);
-					}
-					else if (action.equalsIgnoreCase("click"))
-					{
+					} else if (action.equalsIgnoreCase("click")) {
 						element.click();
+					}
+					else if(action.equalsIgnoreCase("isDisplayed"))
+					{
+						try
+						{	
+							boolean elementDisplayed = element.isDisplayed();
+						}
+						catch(NoSuchElementException e)
+						{
+							System.out.println("Element not displayed");
+						}
+					}
+					else if(action.equalsIgnoreCase("getText"))
+					{
+						String elementText = element.getText();
+						System.out.println("Text from element is : "+elementText);
 					}
 
 					locatorName = null;
 					break;
 
 				case "name":
+					
+					wait.ignoring(NoSuchElementException.class).until(ExpectedConditions.presenceOfElementLocated(By.name(lcoatorVal)));
+					element = driver.findElement(By.name(lcoatorVal));
 
+					if (action.equalsIgnoreCase("sendKeys")) {
+						element.clear();
+						element.sendKeys(value);
+					} else if (action.equalsIgnoreCase("click")) {
+						element.click();
+					}
+					else if(action.equalsIgnoreCase("isDisplayed"))
+					{
+						try
+						{	
+							boolean elementDisplayed = element.isDisplayed();
+						}
+						catch(NoSuchElementException e)
+						{
+							System.out.println("Element not displayed");
+						}
+					}
+					else if(action.equalsIgnoreCase("getText"))
+					{
+						String elementText = element.getText();
+						System.out.println("Text from element is : "+elementText);
+					}
+					
+					locatorName = null;
+					
 					break;
 
 				case "className":
+					
+					wait.ignoring(NoSuchElementException.class).until(ExpectedConditions.presenceOfElementLocated(By.className(lcoatorVal)));
+					element = driver.findElement(By.className(lcoatorVal));
+					
+					if (action.equalsIgnoreCase("sendKeys")) {
+						element.clear();
+						element.sendKeys(value);
+					} else if (action.equalsIgnoreCase("click")) {
+						element.click();
+					} 
+					else if(action.equalsIgnoreCase("isDisplayed"))
+					{
+						try
+						{	
+							boolean elementDisplayed = element.isDisplayed();
+							System.out.println("Element displayed");
+						}
+						catch(NoSuchElementException e)
+						{
+							System.out.println("Element not displayed");
+						}
+					}
+					else if(action.equalsIgnoreCase("getText"))
+					{
+						String elementText = element.getText();
+						System.out.println("Text from element is : "+elementText);
+					}
+
+					locatorName = null;
 
 					break;
 
 				case "xpath":
-
+										
+					wait.ignoring(NoSuchElementException.class).until(ExpectedConditions.presenceOfElementLocated(By.xpath(lcoatorVal)));
+					element = driver.findElement(By.xpath(lcoatorVal));
+					
+					if (action.equalsIgnoreCase("sendKeys")) {
+						element.clear();
+						element.sendKeys(value);
+					} else if (action.equalsIgnoreCase("click")) {
+						element.click();
+					} 
+					else if(action.equalsIgnoreCase("isDisplayed"))
+					{
+						try
+						{	
+							boolean elementDisplayed = element.isDisplayed();
+							System.out.println("Element Displayed");
+						}
+						catch(NoSuchElementException e)
+						{
+							System.out.println("Element not displayed");
+						}
+					}
+					else if(action.equalsIgnoreCase("getText"))
+					{
+						String elementText = element.getText();
+						System.out.println("Text from element is : "+elementText);
+					}
+					
+					locatorName = null;
+					
 					break;
 
 				case "linkText":
 
-					WebElement element = driver.findElement(By.linkText(lcoatorVal));
+					wait.ignoring(NoSuchElementException.class).until(ExpectedConditions.presenceOfElementLocated(By.linkText(lcoatorVal)));
+					element = driver.findElement(By.linkText(lcoatorVal));
 
-					if (action.equalsIgnoreCase("sendKeys"))
-					{
+					if (action.equalsIgnoreCase("sendKeys")) {
 						element.clear();
 						element.sendKeys(value);
-					}
-					else if (action.equalsIgnoreCase("click"))
-					{
+					} else if (action.equalsIgnoreCase("click")) {
 						element.click();
 					}
-
+					else if(action.equalsIgnoreCase("isDisplayed"))
+					{
+						try
+						{	
+							boolean elementDisplayed = element.isDisplayed();
+						}
+						catch(NoSuchElementException e)
+						{
+							System.out.println("Element not displayed");
+						}
+					}
+					else if(action.equalsIgnoreCase("getText"))
+					{
+						String elementText = element.getText();
+						System.out.println("Text from element is : "+elementText);
+					}
+					
 					locatorName = null;
 					break;
 
 				case "partialLinkText":
+					
+					wait.ignoring(NoSuchElementException.class).until(ExpectedConditions.presenceOfElementLocated(By.partialLinkText(lcoatorVal)));
+					element = driver.findElement(By.partialLinkText(lcoatorVal));
 
+					if (action.equalsIgnoreCase("sendKeys")) {
+						element.clear();
+						element.sendKeys(value);
+					} else if (action.equalsIgnoreCase("click")) {
+						element.click();
+					}
+					else if(action.equalsIgnoreCase("isDisplayed"))
+					{
+						try
+						{	
+							boolean elementDisplayed = element.isDisplayed();
+						}
+						catch(NoSuchElementException e)
+						{
+							System.out.println("Element not displayed");
+						}
+					}
+					else if(action.equalsIgnoreCase("getText"))
+					{
+						String elementText = element.getText();
+						System.out.println("Text from element is : "+elementText);
+					}
+					
+					locatorName = null;
+					
 					break;
 
-				case "cssValue":
+				case "cssSelector":
+					
+					wait.ignoring(NoSuchElementException.class).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(lcoatorVal)));
+					element = driver.findElement(By.cssSelector(lcoatorVal));
 
+					if (action.equalsIgnoreCase("sendKeys")) {
+						element.clear();
+						element.sendKeys(value);
+					} else if (action.equalsIgnoreCase("click")) {
+						element.click();
+					}
+					else if(action.equalsIgnoreCase("isDisplayed"))
+					{
+						try
+						{	
+							boolean elementDisplayed = element.isDisplayed();
+						}
+						catch(NoSuchElementException e)
+						{
+							System.out.println("Element not displayed");
+						}
+					}
+					else if(action.equalsIgnoreCase("getText"))
+					{
+						String elementText = element.getText();
+						System.out.println("Text from element is : "+elementText);
+					}
+					
+					locatorName = null;
+					
 					break;
 
 				case "tagName":
+					
+					wait.ignoring(NoSuchElementException.class).until(ExpectedConditions.presenceOfElementLocated(By.tagName(lcoatorVal)));
+					element = driver.findElement(By.tagName(lcoatorVal));
 
+					if (action.equalsIgnoreCase("sendKeys")) {
+						element.clear();
+						element.sendKeys(value);
+					} else if (action.equalsIgnoreCase("click")) {
+						element.click();
+					}
+					else if(action.equalsIgnoreCase("isDisplayed"))
+					{
+						try
+						{	
+							boolean elementDisplayed = element.isDisplayed();
+						}
+						catch(NoSuchElementException e)
+						{
+							System.out.println("Element not displayed");
+						}
+					}
+					else if(action.equalsIgnoreCase("getText"))
+					{
+						String elementText = element.getText();
+						System.out.println("Text from element is : "+elementText);
+					}
+					
+					locatorName = null;
+					
 					break;
 
 				default:
 					break;
 				}
 			}
-			catch(Exception ex)
+			catch(NullPointerException ex)
 			{
 				
 			}
